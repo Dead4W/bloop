@@ -17,7 +17,7 @@ import {
   REFRESH_TOKEN_KEY,
   saveJsonToStorage,
   savePlainToStorage,
-  SESSION_ID_KEY,
+  SESSION_ID_KEY, USER_DATA,
   USER_DATA_FORM,
 } from '../../services/storage';
 import { getConfig, getRepos, saveUserData } from '../../services/api';
@@ -26,21 +26,22 @@ import StatusBar from '../../components/StatusBar';
 import UserForm from './UserForm';
 import FeaturesStep from './FeaturesStep';
 import SelfServeStep from './SelfServeStep';
+import {User} from "../../types/user";
 
 export type Form = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  emailError: string | null;
+  username: string;
+  password: string;
+  user: null | User;
+  error: string | null,
 };
 
 const Onboarding = ({ activeTab }: { activeTab: string }) => {
   const { t } = useTranslation();
   const [form, setForm] = useState<Form>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    emailError: null,
+    username: '',
+    password: '',
+    user: null,
+    error: null,
     ...getJsonFromStorage(USER_DATA_FORM),
   });
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
@@ -112,13 +113,8 @@ const Onboarding = ({ activeTab }: { activeTab: string }) => {
   }, []);
 
   const onSubmit = useCallback(() => {
-    saveUserData({
-      email: form.email,
-      first_name: form.firstName,
-      last_name: form.lastName,
-      unique_id: envConfig.tracking_id || '',
-    });
     saveJsonToStorage(USER_DATA_FORM, form);
+    saveJsonToStorage(USER_DATA, form.user);
     closeOnboarding();
     setTimeout(() => setShouldShowPopup(true), 1000);
   }, [form, envConfig.tracking_id]);

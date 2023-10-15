@@ -361,9 +361,7 @@ impl Application {
     }
 
     fn llm_gateway_client(&self) -> Result<llm_gateway::Client> {
-        let answer_api_token = self.answer_api_token()?.map(|s| s.expose_secret().clone());
-
-        Ok(llm_gateway::Client::new(&self.config.answer_api_url).bearer(answer_api_token))
+        Ok(llm_gateway::Client::new(&self.config.answer_api_url))
     }
 
     fn seal_auth_state(&self, payload: serde_json::Value) -> String {

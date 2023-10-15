@@ -18,12 +18,14 @@ import { getDateFnsLocale } from '../../../../utils';
 import MarkdownWithCode from '../../../MarkdownWithCode';
 import { AppNavigationContext } from '../../../../context/appNavigationContext';
 import {
+  getJsonFromStorage,
   getPlainFromStorage,
   LOADING_STEPS_SHOWN_KEY,
-  savePlainToStorage,
+  savePlainToStorage, USER_DATA,
 } from '../../../../services/storage';
 import MessageFeedback from './MessageFeedback';
 import FileChip from './FileChip';
+import {User} from "../../../../types/user";
 
 type Props = {
   author: ChatMessageAuthor;
@@ -43,6 +45,8 @@ type Props = {
   onMessageEdit: (queryId: string, i: number) => void;
   singleFileExplanation?: boolean;
 };
+
+const user: User | null = getJsonFromStorage(USER_DATA);
 
 const ConversationMessage = ({
   author,
@@ -160,7 +164,7 @@ const ConversationMessage = ({
               <div className="w-6 h-6 rounded-full bg-chat-bg-border overflow-hidden flex items-center justify-center select-none">
                 {author === ChatMessageAuthor.User ? (
                   <img
-                    src={envConfig.github_user?.avatar_url}
+                    src={user?.avatar_url ?? ''}
                     alt={t('avatar')}
                   />
                 ) : (
@@ -203,15 +207,15 @@ const ConversationMessage = ({
               </div>
             )}
           </div>
-          <MessageFeedback
-            showInlineFeedback={showInlineFeedback}
-            isHistory={isHistory}
-            threadId={threadId}
-            queryId={queryId}
-            repoRef={repoRef}
-            error={!!error}
-            scrollToBottom={scrollToBottom}
-          />
+          {/*<MessageFeedback*/}
+          {/*  showInlineFeedback={showInlineFeedback}*/}
+          {/*  isHistory={isHistory}*/}
+          {/*  threadId={threadId}*/}
+          {/*  queryId={queryId}*/}
+          {/*  repoRef={repoRef}*/}
+          {/*  error={!!error}*/}
+          {/*  scrollToBottom={scrollToBottom}*/}
+          {/*/>*/}
         </>
       ) : error ? (
         <div className="flex items-start gap-3 text-bg-danger p-4 rounded-lg bg-[linear-gradient(90deg,rgba(251,113,133,0.08)_0%,rgba(231,139,152,0.08)_33.18%,rgba(191,191,191,0.08)_100%)]">

@@ -6,9 +6,7 @@ import { LocaleType } from '../../types/general';
 
 const localesMap: Record<LocaleType, { name: string; icon: string }> = {
   en: { name: 'English', icon: '🇬🇧' },
-  ja: { name: '日本', icon: '🇯🇵' },
-  zhCN: { name: '简体中文', icon: '🇨🇳' },
-  es: { name: 'Español', icon: '🇪🇸' },
+  ru: { name: 'Russian', icon: '🇷🇺' },
 };
 
 const LanguageSelector = () => {

@@ -12,6 +12,8 @@ import { getSubscriptionLink, githubLogout } from '../../services/api';
 import { PersonalQuotaContext } from '../../context/personalQuotaContext';
 import LiteLoaderContainer from '../Loaders/LiteLoader';
 import Tab from './Tab';
+import {User} from "../../types/user";
+import {getJsonFromStorage, USER_DATA, USER_DATA_FORM} from "../../services/storage";
 
 type Props = {
   isSkeleton?: boolean;
@@ -28,6 +30,8 @@ const NavBar = ({ isSkeleton, activeTab }: Props) => {
   const { openLink, isSelfServe, os, envConfig } = useContext(DeviceContext);
   const { tabs, handleReorderTabs, setActiveTab } = useContext(TabsContext);
   const [isFetchingLink, setIsFetchingLink] = useState(false);
+
+  const user: User | null = getJsonFromStorage(USER_DATA);
 
   const handleUpgrade = useCallback(() => {
     setIsFetchingLink(true);
@@ -72,12 +76,6 @@ const NavBar = ({ isSkeleton, activeTab }: Props) => {
         icon: <Magazine />,
         type: MenuListItemType.DEFAULT,
         onClick: () => openLink('https://bloop.ai/docs'),
-      },
-      {
-        text: t('Report a bug'),
-        icon: <Bug />,
-        type: MenuListItemType.DEFAULT,
-        onClick: () => setBugReportModalOpen(true),
       },
       {
         text: t('Sign out'),
@@ -141,9 +139,9 @@ const NavBar = ({ isSkeleton, activeTab }: Props) => {
           <DropdownWithIcon
             items={dropdownItems}
             icon={
-              envConfig.github_user?.avatar_url ? (
+              user?.avatar_url ? (
                 <div className="w-5 h-5 rounded-full overflow-hidden">
-                  <img src={envConfig.github_user?.avatar_url} alt="avatar" />
+                  <img src={user?.avatar_url} alt="avatar" />
                 </div>
               ) : (
                 <Person />

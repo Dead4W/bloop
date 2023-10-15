@@ -120,8 +120,8 @@ const HomePage = ({ randomKey }: { randomKey?: any }) => {
             <Trans>Add</Trans>
           </h4>
           <div className="flex gap-3.5 pb-2">
-            <AddRepoCard type="github" onClick={setAddReposOpen} />
-            <AddRepoCard type="public" onClick={setAddReposOpen} />
+            {/*<AddRepoCard type="github" onClick={setAddReposOpen} />*/}
+            {/*<AddRepoCard type="public" onClick={setAddReposOpen} />*/}
             {!isSelfServe && (
               <AddRepoCard type="local" onClick={setAddReposOpen} />
             )}

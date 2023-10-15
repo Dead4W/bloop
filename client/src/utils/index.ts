@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { ja, zhCN, es } from 'date-fns/locale';
+import {ru} from 'date-fns/locale';
 import { LocaleType, RepoType, RepoUi } from '../types/general';
 import langs from './langs.json';
 
@@ -351,12 +351,8 @@ export function humanNumber(num: number) {
 
 export const getDateFnsLocale = (locale: LocaleType) => {
   switch (locale) {
-    case 'ja':
-      return { locale: ja };
-    case 'zhCN':
-      return { locale: zhCN };
-    case 'es':
-      return { locale: es };
+    case 'ru':
+      return { locale: ru };
     default:
       return undefined;
   }

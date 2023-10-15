@@ -95,11 +95,9 @@ pub(super) async fn answer(
 ) -> super::Result<impl IntoResponse> {
     let query_id = uuid::Uuid::new_v4();
 
+    // FIXME: auth
     let conversation_id = ConversationId {
-        user_id: user
-            .login()
-            .ok_or_else(|| super::Error::user("didn't have user ID"))?
-            .to_string(),
+        user_id: "dead4w".parse().unwrap(),
         thread_id: params.thread_id,
     };
 
@@ -207,14 +205,8 @@ async fn try_execute_agent(
 > {
     QueryLog::new(&app.sql).insert(&params.q).await?;
 
-    let answer_api_token = app
-        .answer_api_token()
-        .map_err(|e| super::Error::user(e).with_status(StatusCode::UNAUTHORIZED))?
-        .map(|s| s.expose_secret().clone());
-
     let llm_gateway = llm_gateway::Client::new(&app.config.answer_api_url)
         .temperature(0.0)
-        .bearer(answer_api_token)
         .session_reference_id(conversation_id.to_string());
 
     // confirm client compatibility with answer-api
@@ -399,10 +391,7 @@ pub async fn explain(
 
     let conversation_id = ConversationId {
         thread_id: params.thread_id,
-        user_id: user
-            .login()
-            .ok_or_else(|| super::Error::user("didn't have user ID"))?
-            .to_string(),
+        user_id: "dead4w".parse().unwrap(),
     };
 
     let mut query = parser::parse_nl(&virtual_req.q)

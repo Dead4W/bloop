@@ -76,7 +76,7 @@ export const LightNavigation = () => {
       <ListNavigation
         title=""
         items={[
-          { title: 'General', icon: <Person /> },
+          // { title: 'General', icon: <Person /> },
           { title: 'Preferences', icon: <TuneControls /> },
           { title: 'Repositories', icon: <Repository /> },
         ]}
