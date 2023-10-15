@@ -138,21 +138,6 @@ const StatusBar = () => {
           <Magazine />
           <Trans>Documentation</Trans>
         </Button>
-        <Button
-          size="small"
-          variant="secondary"
-          onClick={() => openLink(discordLink)}
-        >
-          <DiscordLogo />
-          <Trans>Discord</Trans>
-        </Button>
-        <Button
-          size="small"
-          variant="secondary"
-          onClick={() => setBugReportModalOpen(true)}
-        >
-          <Trans>Report a bug</Trans>
-        </Button>
       </span>
     </div>
   );

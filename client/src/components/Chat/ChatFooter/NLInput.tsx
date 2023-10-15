@@ -18,6 +18,7 @@ import { UIContext } from '../../../context/uiContext';
 import { DeviceContext } from '../../../context/deviceContext';
 import Button from '../../Button';
 import InputLoader from './InputLoader';
+import {getJsonFromStorage, PROMPT_GUIDE} from "../../../services/storage";
 
 type Props = {
   id?: string;
@@ -90,7 +91,7 @@ const NLInput = ({
   );
 
   const handleInputFocus = useCallback(() => {
-    if (envConfig?.bloop_user_profile?.prompt_guide !== 'dismissed') {
+    if (getJsonFromStorage(PROMPT_GUIDE) !== 'dismissed') {
       setPromptGuideOpen(true);
     }
   }, [envConfig?.bloop_user_profile?.prompt_guide]);

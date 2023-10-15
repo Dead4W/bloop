@@ -437,14 +437,10 @@ impl Agent {
     fn store(&mut self) -> impl Future<Output = ()> {
         let sql = Arc::clone(&self.app.sql);
         let conversation = (self.repo_ref.clone(), self.exchanges.clone());
-        let conversation_id = self
-            .user
-            .login()
-            .context("didn't have user ID")
-            .map(|user_id| ConversationId {
-                thread_id: self.thread_id,
-                user_id: user_id.to_owned(),
-            });
+        let conversation_id = Ok(ConversationId {
+            thread_id: self.thread_id,
+            user_id: "dead4w".to_owned(),
+        });
 
         async move {
             let result = match conversation_id {

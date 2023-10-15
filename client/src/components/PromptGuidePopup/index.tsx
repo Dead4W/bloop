@@ -7,6 +7,7 @@ import { DeviceContext } from '../../context/deviceContext';
 import { UIContext } from '../../context/uiContext';
 import { getConfig, putConfig } from '../../services/api';
 import PromptSvg from './PromptSvg';
+import {PROMPT_GUIDE, saveJsonToStorage} from "../../services/storage";
 
 const PromptGuidePopup = () => {
   const { t } = useTranslation();
@@ -17,21 +18,7 @@ const PromptGuidePopup = () => {
 
   const handlePromptGuideClose = useCallback(() => {
     setPromptGuideOpen(false);
-    setEnvConfig((prev) => ({
-      ...prev,
-      bloop_user_profile: {
-        ...(prev.bloop_user_profile || {}),
-        prompt_guide: 'dismissed',
-      },
-    }));
-    putConfig({
-      bloop_user_profile: {
-        ...(envConfig?.bloop_user_profile || {}),
-        prompt_guide: 'dismissed',
-      },
-    }).then(() => {
-      getConfig().then(setEnvConfig);
-    });
+    saveJsonToStorage(PROMPT_GUIDE, 'dismissed');
   }, [envConfig?.bloop_user_profile]);
 
   return (

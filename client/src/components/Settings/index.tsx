@@ -31,7 +31,7 @@ const Settings = () => {
 
   const listNavigationItems = useMemo(
     () => [
-      { title: t('General'), icon: <Person /> },
+      // { title: t('General'), icon: <Person /> },
       { title: t('Preferences'), icon: <TuneControls /> },
       // { title: 'Repositories', icon: <Repository /> },
     ],
@@ -48,7 +48,7 @@ const Settings = () => {
       style={isSettingsOpen ? backdropFilterVisible : backdropFilterInvisible}
       onClick={() => {
         setSettingsOpen(false);
-        setSettingsSection(SettingSections.GENERAL);
+        setSettingsSection(SettingSections.PREFERENCES);
       }}
     >
       <div
