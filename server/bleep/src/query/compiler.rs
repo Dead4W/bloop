@@ -94,12 +94,12 @@ impl Compiler {
 
             for (field, extractor) in &mut self.extractors {
                 let Some(extraction) = extractor(query) else {
-                    continue
+                    continue;
                 };
 
                 let field_query = match extraction {
                     Extraction::Literal(Literal::Plain(text)) => {
-                        let tokenizer = index
+                        let mut tokenizer = index
                             .tokenizer_for_field(*field)
                             .context("field is missing tokenizer")?;
 
@@ -209,7 +209,7 @@ pub fn trigrams(s: &str) -> impl Iterator<Item = CompactString> {
 
     std::iter::from_fn(move || match chars.len() {
         0 => None,
-        1 | 2 | 3 => Some(mem::take(&mut chars).into_iter().collect()),
+        1..=3 => Some(mem::take(&mut chars).into_iter().collect()),
         _ => {
             let out = chars.iter().take(3).collect();
             chars.remove(0);
@@ -376,7 +376,7 @@ mod tests {
             let (occur, term) = &subquery.clauses()[0];
             let term = term.downcast_ref::<TermQuery>().unwrap();
             assert_eq!(*occur, Occur::Should);
-            assert_eq!(term.term().as_str().unwrap(), expected);
+            assert_eq!(term.term().value().as_str().unwrap(), expected);
         }
     }
 }

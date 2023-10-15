@@ -57,7 +57,6 @@ mod remotes;
 mod repo;
 mod webserver;
 
-#[cfg(feature = "ee")]
 mod ee;
 
 pub mod analytics;
@@ -141,7 +140,7 @@ impl Application {
         let repo_pool = config.source.initialize_pool()?;
 
         // Databases & indexes
-        let sql = Arc::new(db::init(&config).await?);
+        let sql = Arc::new(db::initialize(&config).await?);
         let semantic =
             Semantic::initialize(&config.model_dir, &config.qdrant_url, Arc::clone(&config))
                 .await
@@ -149,15 +148,26 @@ impl Application {
 
         // Wipe existing dbs & caches if the schema has changed
         if config.source.index_version_mismatch() {
+            debug!("schema version mismatch, resetting state");
+
             Indexes::reset_databases(&config).await?;
+            debug!("tantivy indexes deleted");
+
             cache::FileCache::new(sql.clone(), semantic.clone())
                 .reset(&repo_pool)
                 .await?;
+            debug!("caches deleted");
 
             semantic.reset_collection_blocking().await?;
+            debug!("semantic indexes deleted");
+
+            debug!("state reset complete");
         }
+
+        debug!("saving index version");
         config.source.save_index_version()?;
 
+        debug!("initializing indexes");
         let indexes = Indexes::new(&config).await?.into();
 
         // Enforce capabilies and features depending on environment
@@ -216,8 +226,7 @@ impl Application {
 
         sentry::configure_scope(|scope| {
             scope.add_event_processor(|event| {
-                let Some(ref logger) = event.logger
-                else {
+                let Some(ref logger) = event.logger else {
                     return Some(event);
                 };
 
@@ -464,11 +473,14 @@ where
         })
 }
 
+#[tracing::instrument(skip_all)]
 fn initialize_analytics(
     config: &Configuration,
     tracking_seed: impl Into<Option<String>>,
     options: impl Into<Option<analytics::HubOptions>>,
 ) -> Result<Arc<analytics::RudderHub>> {
+    debug!("creating configuration");
+
     let Some(key) = &config.analytics_key else {
         bail!("analytics key missing; skipping initialization");
     };
@@ -486,7 +498,6 @@ fn initialize_analytics(
         }),
     });
 
-    info!("configuring analytics ...");
     tokio::task::block_in_place(|| {
         analytics::RudderHub::new_with_options(
             &config.source,

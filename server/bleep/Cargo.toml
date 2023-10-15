@@ -1,15 +1,16 @@
 [package]
 name = "bleep"
-version = "0.5.5"
+version = "0.5.6"
 edition = "2021"
 default-run = "bleep"
 build = "build.rs"
 
 [features]
-default = ["dynamic-ort"]
+default = ["dynamic-ort", "ee-pro"]
 debug = ["console-subscriber", "histogram"]
 dynamic-ort = ["ort/load-dynamic"]
-ee = []
+ee-pro = []
+ee-cloud = ["ee-pro"]
 
 [[bin]]
 name = "bleep"
@@ -29,7 +30,8 @@ harness = false
 [dependencies]
 
 # core
-tantivy = { version = "0.19.2", features = ["mmap"] }
+tantivy = { version = "0.21.0", features = ["mmap"] }
+tantivy-columnar = "0.2.0"
 tokio = { version = "1.32.0", features = ["macros", "process", "rt", "rt-multi-thread", "io-std", "io-util", "sync", "fs"] }
 futures = "0.3.28"
 rayon = "1.8.0"
